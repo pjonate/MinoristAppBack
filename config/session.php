@@ -214,4 +214,14 @@ return [
 
     'partitioned' => env('SESSION_PARTITIONED_COOKIE', false),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Expire On Close
+    |--------------------------------------------------------------------------
+    |
+    | If true, session will immediately expire when the browser closes.
+    |
+    */
+    'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', true),
+
 ];

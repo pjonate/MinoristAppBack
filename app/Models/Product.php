@@ -16,6 +16,7 @@ class product extends Model
         'categoria',
         'proveedor',
         'precio',
-        'stock'
+        'stock',
+        "unidad_venta"
     ];
 }

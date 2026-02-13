@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/react/static/css/main.313b8183.css",
-    "main.js": "/react/static/js/main.fc6af267.js",
+    "main.css": "/react/static/css/main.3319a826.css",
+    "main.js": "/react/static/js/main.587be744.js",
     "static/js/453.d855a71b.chunk.js": "/react/static/js/453.d855a71b.chunk.js",
     "static/media/fondo_login.jpg": "/react/static/media/fondo_login.12d918815596fc310b99.jpg",
     "static/media/bootstrap-icons.woff?": "/react/static/media/bootstrap-icons.1295669cd4e305c97f2c.woff",
     "static/media/bootstrap-icons.woff2?": "/react/static/media/bootstrap-icons.92ea18a81d737146ff04.woff2",
     "index.html": "/react/index.html",
-    "main.313b8183.css.map": "/react/static/css/main.313b8183.css.map",
-    "main.fc6af267.js.map": "/react/static/js/main.fc6af267.js.map",
+    "main.3319a826.css.map": "/react/static/css/main.3319a826.css.map",
+    "main.587be744.js.map": "/react/static/js/main.587be744.js.map",
     "453.d855a71b.chunk.js.map": "/react/static/js/453.d855a71b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.313b8183.css",
-    "static/js/main.fc6af267.js"
+    "static/css/main.3319a826.css",
+    "static/js/main.587be744.js"
   ]
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -35,17 +36,38 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Buscar usuario por nombre
-        $user = User::where('name', $request->name)->first();
+        $credentials = $request->only('name', 'password');
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! Auth::attempt($credentials)){
             return response()->json(['message' => 'Usuario o contraseña incorrectos'], 401);
         }
 
+        $user = Auth::user();
+        $token = $user->createToken('web')->plainTextToken;
+
         return response()->json([
             'message' => 'Inicio de sesión exitoso',
-            'user' => $user->name,
-            //'token' => $token,
+            'token' => $token,
+            'user' => $user,
         ], 200);
+    }
+
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json(['message' => 'Sesión cerrada'], 200);
+    }
+
+    public function user(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'No autenticado'], 401);
+        }
+        return response()->json($user, 200);
     }
 }

@@ -10,10 +10,19 @@ class ProductController extends Controller//se creae la clase ProductController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $productos= Product::all();
-        return response()->json($productos);
+        $query = Product::query();
+
+        if ($request->name) {
+            $query->where('descripcion', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->code) {
+            $query->where('codigo', $request->code); // exact match
+        }
+
+        return $query->paginate(5);
     }
 
     /**
@@ -41,7 +50,8 @@ class ProductController extends Controller//se creae la clase ProductController
             'descripcion' => $request->descripcion,
             'proveedor' => $request->proveedor,
             'precio' => $request->precio,
-            'stock' => $request->stock
+            'stock' => $request->stock,
+            'unidad_venta' => $request->tipo ?? 'unidad',
         ]);
 
         return response()->json([
