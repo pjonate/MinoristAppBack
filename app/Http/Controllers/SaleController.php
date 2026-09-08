@@ -6,6 +6,7 @@ use Illuminate\Http\Request;//importa el modelo de Request, util para realizar s
 use App\Models\Sale;
 use App\Models\DetalleVenta;
 use App\Models\Product; 
+use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
 {
@@ -103,10 +104,65 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        /*return response()->json([
-            'message' => 'Producto creado exitosamente',
-            'data' => $validated
-        ], 201);*/
+        $request->validate([
+            'total' => 'required|numeric',
+            'items' => 'required|array|min:1',
+            'items.*.code' => 'required',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.subtotal' => 'required|numeric'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // 🔵 1. crear venta
+            $sale = Sale::create([
+                'date' => now(), // tu tabla ya soporta CURRENT_TIMESTAMP
+                'total' => $request->total
+            ]);
+
+            // 🔵 2. recorrer items
+            foreach ($request->items as $item) {
+
+                $product = Product::where('codigo', $item['code'])->first();
+
+                if (!$product) {
+                    throw new \Exception("Producto no encontrado: {$item['code']}");
+                }
+
+                // 🔴 validar stock
+                if ($product->stock < $item['quantity']) {
+                    throw new \Exception("Stock insuficiente para {$product->codigo}");
+                }
+
+                // 🔵 3. crear detalle
+                DetalleVenta::create([
+                    'id_venta' => $sale->id_sale, // ⚠️ importante: tu PK es id_sale
+                    'id_producto' => $product->id,
+                    'cantidad' => $item['quantity'],
+                    'subtotal' => $item['subtotal']
+                ]);
+
+                // 🔵 4. descontar stock
+                $product->stock -= $item['quantity'];
+                $product->save();
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Venta registrada correctamente',
+                'sale' => $sale
+            ], 201);
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 400);
+        }
     }
 
     /**

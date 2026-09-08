@@ -25,6 +25,11 @@ class ProductController extends Controller//se creae la clase ProductController
         return $query->paginate(5);
     }
 
+    public function all(Request $request)
+    {
+        return Product::orderBy('codigo')->get();
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -146,5 +151,53 @@ class ProductController extends Controller//se creae la clase ProductController
             ->get(['id', 'descripcion', 'precio', 'stock']);
 
         return response()->json($productos);
+    }
+
+    public function findByCode($codigo)
+    {
+        $producto = Product::where('codigo', $codigo)->first();
+
+        if (!$producto) {
+            return response()->json([
+                'error' => 'No encontrado',
+                'codigo' => $codigo
+            ], 404);
+        }
+
+        // 🔴 VALIDACIÓN DE STOCK
+        if ($producto->stock <= 0) {
+            return response()->json([
+                'error' => 'Producto sin stock',
+                'codigo' => $codigo
+            ], 400); // o 409 si quieres ser más semántico
+        }
+
+        return response()->json($producto, 200);
+    }
+
+    public function searchProducts(Request $request)
+    {
+        $query = trim($request->query('q'));
+
+        if (!$query || strlen($query) < 2) {
+            return response()->json([], 200);
+        }
+
+        $isBarcode = preg_match('/^\d+$/', $query);
+
+        if ($isBarcode) {
+            $product = Product::where('codigo', $query)->first();
+
+            return response()->json(
+                $product ? [$product] : [],
+                200
+            );
+        }
+
+        $products = Product::where('descripcion', 'LIKE', "%{$query}%")
+            ->limit(10)
+            ->get();
+
+        return response()->json($products, 200);
     }
 }
