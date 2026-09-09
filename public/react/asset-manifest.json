@@ -1,18 +1,17 @@
 {
   "files": {
-    "main.css": "/react/static/css/main.3319a826.css",
-    "main.js": "/react/static/js/main.b611103d.js",
-    "static/js/453.d855a71b.chunk.js": "/react/static/js/453.d855a71b.chunk.js",
-    "static/media/fondo_login.jpg": "/react/static/media/fondo_login.12d918815596fc310b99.jpg",
+    "main.css": "/react/static/css/main.3ffe987a.css",
+    "main.js": "/react/static/js/main.da20db20.js",
+    "static/js/453.825386d9.chunk.js": "/react/static/js/453.825386d9.chunk.js",
     "static/media/bootstrap-icons.woff?": "/react/static/media/bootstrap-icons.1295669cd4e305c97f2c.woff",
     "static/media/bootstrap-icons.woff2?": "/react/static/media/bootstrap-icons.92ea18a81d737146ff04.woff2",
     "index.html": "/react/index.html",
-    "main.3319a826.css.map": "/react/static/css/main.3319a826.css.map",
-    "main.b611103d.js.map": "/react/static/js/main.b611103d.js.map",
-    "453.d855a71b.chunk.js.map": "/react/static/js/453.d855a71b.chunk.js.map"
+    "main.3ffe987a.css.map": "/react/static/css/main.3ffe987a.css.map",
+    "main.da20db20.js.map": "/react/static/js/main.da20db20.js.map",
+    "453.825386d9.chunk.js.map": "/react/static/js/453.825386d9.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3319a826.css",
-    "static/js/main.b611103d.js"
+    "static/css/main.3ffe987a.css",
+    "static/js/main.da20db20.js"
   ]
 }
