@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;//se define la ruta para este archivo
 
 use Illuminate\Http\Request;//importa el modelo de Request, util para realizar solicitudes HTTP en Laravel
+use Illuminate\Support\Facades\DB;
 use App\Models\Product;//importa el modelo producto, para modificarlo a traves de las operaciones
 
 class ProductController extends Controller//se creae la clase ProductController
@@ -48,7 +49,6 @@ class ProductController extends Controller//se creae la clase ProductController
             'precio' => 'required|numeric',//obligaotrio, de tipo numerico
             'stock' => 'required|integer',//obligaotrio, de tipo entero
         ]);
-
         $product = Product::create([
             'codigo' => $request->codigo,
             'categoria' => $request->categoria,
@@ -62,6 +62,38 @@ class ProductController extends Controller//se creae la clase ProductController
         return response()->json([
             'message' => 'Producto registrado correctamente',
             'product' => $product
+        ], 201);
+    }
+
+    public function import(Request $request)
+    {
+        $validated = $request->validate([
+            'products' => ['required', 'array', 'min:1'],
+            'products.*.codigo' => ['nullable', 'string', 'max:100'],
+            'products.*.descripcion' => ['required', 'string'],
+            'products.*.categoria' => ['required', 'string', 'max:100'],
+            'products.*.proveedor' => ['nullable', 'string', 'max:100'],
+            'products.*.precio' => ['required', 'numeric'],
+            'products.*.stock' => ['required', 'integer'],
+        ]);
+
+        $products = DB::transaction(function () use ($validated) {
+            return collect($validated['products'])->map(function ($product) {
+                return Product::create([
+                    'codigo' => $product['codigo'] ?? null,
+                    'descripcion' => $product['descripcion'],
+                    'categoria' => $product['categoria'],
+                    'proveedor' => $product['proveedor'] ?? '',
+                    'precio' => $product['precio'],
+                    'stock' => $product['stock'],
+                    'unidad_venta' => 'unidad',
+                ]);
+            });
+        });
+
+        return response()->json([
+            'message' => 'Productos importados correctamente',
+            'products' => $products,
         ], 201);
     }
 
