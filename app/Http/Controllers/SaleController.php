@@ -107,7 +107,8 @@ class SaleController extends Controller
         $request->validate([
             'total' => 'required|numeric',
             'items' => 'required|array|min:1',
-            'items.*.code' => 'required',
+            'items.*.code' => 'nullable|string',
+            'items.*.product_id' => 'nullable|integer|exists:product,id',
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.subtotal' => 'required|numeric'
         ]);
@@ -124,15 +125,17 @@ class SaleController extends Controller
             // 🔵 2. recorrer items
             foreach ($request->items as $item) {
 
-                $product = Product::where('codigo', $item['code'])->first();
+                $product = !empty($item['product_id'])
+                    ? Product::find($item['product_id'])
+                    : Product::where('codigo', $item['code'] ?? null)->first();
 
                 if (!$product) {
-                    throw new \Exception("Producto no encontrado: {$item['code']}");
+                    throw new \Exception('Producto no encontrado');
                 }
 
                 // 🔴 validar stock
                 if ($product->stock < $item['quantity']) {
-                    throw new \Exception("Stock insuficiente para {$product->codigo}");
+                    throw new \Exception("Stock insuficiente para {$product->descripcion}");
                 }
 
                 // 🔵 3. crear detalle
@@ -155,13 +158,17 @@ class SaleController extends Controller
                 'sale' => $sale
             ], 201);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
 
             DB::rollBack();
 
+            report($e);
+
             return response()->json([
-                'error' => $e->getMessage()
-            ], 400);
+                'error' => $e instanceof \Exception
+                    ? $e->getMessage()
+                    : 'No se pudo registrar la venta'
+            ], 500);
         }
     }
 
