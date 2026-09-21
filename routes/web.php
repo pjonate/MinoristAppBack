@@ -16,7 +16,12 @@ Route::get('/products', [ProductController::class, 'index']);
 */
 
 Route::get('/{any}', function () {
-    return File::get(public_path('react/index.html'));
+    return Response::make(File::get(public_path('app/index.html')), 200, [
+        'Content-Type' => 'text/html; charset=UTF-8',
+        'Cache-Control' => 'no-cache, no-store, must-revalidate',
+        'Pragma' => 'no-cache',
+        'Expires' => '0',
+    ]);
 })->where('any', '.*');
 
 //Route::post('/login', [AuthController::class, 'login']);

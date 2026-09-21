@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PedidoController;
 
 //RUTAS PÚBLICAS
 Route::post('/register', [AuthController::class, 'register']);
@@ -23,6 +24,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/products/buscar', [ProductController::class, 'buscarProducto']);
     Route::get('/producto/{codigo}', [ProductController::class, 'findByCode']);
     Route::get('/products/search', [ProductController::class, 'searchProducts']);
+
+    // Pedidos
+    Route::get('/pedidos', [PedidoController::class, 'index']);
+    Route::post('/pedidos', [PedidoController::class, 'store']);
+    Route::post('/pedidos/{pedido}/generar-inventario', [PedidoController::class, 'generateInventory']);
 
 
     // Ventas
