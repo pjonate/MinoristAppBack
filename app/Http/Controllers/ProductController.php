@@ -41,13 +41,13 @@ class ProductController extends Controller//se creae la clase ProductController
             //al metodo "validate", del objeto $request, que es de tipo Request
             //"validate" se usa para validar los datos dentro de un request. Si no se cumplen las reglas,
             //no se continua con la operacion
-            'codigo' => 'required|string|max:255',
-            'categoria' => 'required|string|max:255',//required: el campo es obligatorio
+            'codigo' => 'required|string|max:100',
+            'categoria' => 'required|string|max:100',//required: el campo es obligatorio
             //string: debe ser texto, max: debe tener un maximo de 255 caracteres
-            'descripcion' => 'required|string|max:255',//lo mismo de arriba
-            'proveedor' => 'nullable|string|max:255',//nullable: puede ser vacio
-            'precio' => 'required|numeric',//obligaotrio, de tipo numerico
-            'stock' => 'required|integer',//obligaotrio, de tipo entero
+            'descripcion' => 'required|string',//lo mismo de arriba
+            'proveedor' => 'required|string|max:100',//nullable: puede ser vacio
+            'precio' => 'required|numeric|min:0',//obligaotrio, de tipo numerico
+            'stock' => 'required|integer|min:0',//obligaotrio, de tipo entero
         ]);
         $product = Product::create([
             'codigo' => $request->codigo,
