@@ -20,7 +20,7 @@ class PedidoController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_producto' => ['required', 'integer', 'exists:product,id'],
+            'id_producto' => ['nullable', 'integer', 'exists:product,id'],
             'proveedor' => ['nullable', 'string', 'max:100'],
             'cantidad' => ['required', 'integer', 'min:1'],
             'fecha_pedido' => ['required', 'date'],
